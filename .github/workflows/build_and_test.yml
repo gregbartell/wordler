@@ -25,7 +25,7 @@ jobs:
       - uses: actions/checkout@v2
       # Install any necessary programs
       - name: Configure Environment
-        run: sudo apt-get install ninja-build clang-tidy-12 libboost-all-dev
+        run: sudo apt-get install ninja-build clang-tidy-12 libboost-all-dev libtclap-dev
       # Note: the "build all" action isn't strictly necessary because "make test"
       #       will also do the builds, but doing this as two steps will make the
       #       output easier to read.

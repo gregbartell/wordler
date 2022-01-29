@@ -1,4 +1,4 @@
-Checks: '-*,bugprone-*,clang-analyzer-*,cppcoreguidelines-*,misc-*,performance-*,portability-*,readability-*,-*-magic-numbers,-cppcoreguidelines-pro-bounds-array-to-pointer-decay,-cppcoreguidelines-pro-bounds-constant-array-index,-readability-function-cognitive-complexity,-clang-analyzer-optin.cplusplus.VirtualCall,-misc-no-recursion'
+Checks: '-*,bugprone-*,clang-analyzer-*,cppcoreguidelines-*,misc-*,performance-*,portability-*,readability-*,-*-magic-numbers,-cppcoreguidelines-pro-bounds-array-to-pointer-decay,-cppcoreguidelines-pro-bounds-constant-array-index,-readability-function-cognitive-complexity,-misc-no-recursion,-bugprone-easily-swappable-parameters,-clang-analyzer-optin.cplusplus.VirtualCall,-cppcoreguidelines-avoid-non-const-global-variables,-cppcoreguidelines-owning-memory,-cppcoreguidelines-pro-type-vararg,-cppcoreguidelines-avoid-goto,-*-non-private-member-variables-in-classes,-bugprone-macro-parentheses,-clang-analyzer-optin.performance.Padding,-cppcoreguidelines-explicit-virtual-functions,-cppcoreguidelines-macro-usage,-cppcoreguidelines-pro-type-const-cast,-cppcoreguidelines-pro-type-member-init,-cppcoreguidelines-special-member-functions,-readability-braces-around-statements,-readability-named-parameter,-readability-redundant-access-specifiers,-readability-redundant-member-init'
 # Explicitly disabled warnings:
 #
 # It's hard to avoid magic numbers!
@@ -14,12 +14,36 @@ Checks: '-*,bugprone-*,clang-analyzer-*,cppcoreguidelines-*,misc-*,performance-*
 # I don't care enough to worry about this
 # readability-function-cognitive-complexity
 #
-# tclap violates this one and I can't figure out how to exclude just tclap headers
-# -clang-analyzer-optin.cplusplus.VirtualCall
-#
 # I don't believe this one is helpful in general cases: it may be useful in certain restrictive
 # environments, but that's not me
 # misc-no-recursion
+#
+# I'm genuinely impressed by how much effort went into implementing this check, but
+# sometimes you just have to live dangerously
+# bugprone-easily-swappable-parameters
+#
+# tclap violates this one and I can't figure out how to exclude just tclap headers
+# clang-analyzer-optin.cplusplus.VirtualCall
+#
+# gtest violates these and I can't figure out how to exclude just gtest headers
+# cppcoreguidelines-avoid-non-const-global-variables
+# cppcoreguidelines-owning-memory
+# cppcoreguidelines-pro-type-vararg
+# cppcoreguidelines-avoid-goto
+#
+# gbench violates so many checks that it's a wonder it builds at all
+# *-non-private-member-variables-in-classes
+# bugprone-macro-parentheses
+# clang-analyzer-optin.performance.Padding
+# cppcoreguidelines-explicit-virtual-functions
+# cppcoreguidelines-macro-usage
+# cppcoreguidelines-pro-type-const-cast
+# cppcoreguidelines-pro-type-member-init
+# cppcoreguidelines-special-member-functions
+# readability-braces-around-statements
+# readability-named-parameter
+# readability-redundant-access-specifiers
+# readability-redundant-member-init
 
 HeaderFilterRegex: 'src/*'
 

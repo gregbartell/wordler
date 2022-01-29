@@ -3,6 +3,7 @@
 #include "Wordle.h"
 
 #include <algorithm>
+#include <iostream>
 #include <istream>
 #include <limits>
 #include <string>

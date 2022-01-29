@@ -23,6 +23,9 @@ static void BM_SolverGetBestGuess(benchmark::State& state)
 
     Solver solver{wordlist};
 
-    for (auto _ : state) { benchmark::DoNotOptimize(solver.getBestGuess()); }
+    for (auto _ : state)  // NOLINT
+    {
+        benchmark::DoNotOptimize(solver.getBestGuess());
+    }
 }
 BENCHMARK(BM_SolverGetBestGuess)->Arg(100);
