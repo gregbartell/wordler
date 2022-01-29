@@ -11,37 +11,58 @@
 
 int main(int argc, char* argv[])
 {
-    TCLAP::CmdLine cmd{"Wordler, a solver for Wordle", ' '};
+    // Vars that will hold the arguments read from TCLAP
+    std::string wordlist_filename{};
+    bool hard_mode          = false;
+    bool recalc_first_guess = false;
+    bool stats_mode         = false;
 
-    TCLAP::UnlabeledValueArg<std::string> wordlistArg{
-        "wordlistFilename",
-        "Wordlist file to use. Defaults to 'wordlist.txt' if unspecified.",
-        false,
-        "wordlist.txt",
-        "wordlist.txt",
-        cmd};
+    // TCLAP throws exceptions, so we need to wrap it in a try-catch block
+    try
+    {
+        TCLAP::CmdLine cmd{"Wordler, a solver for Wordle", ' '};
 
-    TCLAP::SwitchArg recalcFirstGuessArg{
-        "r",
-        "recalc-first-guess",
-        "Calculating the first guess takes a long time, so the first guess for the official Wordler wordlist is hardcoded into this program and used by default. Set this option to recalculate it based on the provided wordlist.",
-        cmd};
+        TCLAP::UnlabeledValueArg<std::string> wordlistArg{
+            "wordlistFilename",
+            "Wordlist file to use. Defaults to 'wordlist.txt' if unspecified.",
+            false,
+            "wordlist.txt",
+            "wordlist.txt",
+            cmd};
 
-    TCLAP::SwitchArg statsArg{
-        "",
-        "stats",
-        "Solve every possible puzzle and print statistics about the number of guesses required.",
-        cmd};
+        TCLAP::SwitchArg recalcFirstGuessArg{
+            "r",
+            "recalc-first-guess",
+            "Calculating the first guess takes a long time, so the first guess for the official Wordler wordlist is hardcoded into this program and used by default. Set this option to recalculate it based on the provided wordlist.",
+            cmd};
 
-    TCLAP::SwitchArg hardModeArg{
-        "",
-        "hard",
-        "Play in 'Hard Mode', where all guessed words must be possible solutions according to previously-given clues.",
-        cmd};
+        TCLAP::SwitchArg statsArg{
+            "",
+            "stats",
+            "Solve every possible puzzle and print statistics about the number of guesses required.",
+            cmd};
 
-    cmd.parse(argc, argv);
+        TCLAP::SwitchArg hardModeArg{
+            "",
+            "hard",
+            "Play in 'Hard Mode', where all guessed words must be possible solutions according to previously-given clues.",
+            cmd};
 
-    auto wordlist_filename = wordlistArg.getValue();
+        cmd.parse(argc, argv);
+
+        // Put TCLAP args into our vars, so we don't have to do everything in
+        // this try-catch block
+        wordlist_filename  = wordlistArg.getValue();
+        hard_mode          = hardModeArg.getValue();
+        recalc_first_guess = recalcFirstGuessArg.getValue();
+        stats_mode         = statsArg.getValue();
+    }
+    catch (TCLAP::ArgException& e)
+    {
+        std::cerr << "ERROR: Caught TCLAP exception: " << e.what() << std::endl;
+        return 1;
+    }
+
     if (!std::filesystem::exists(wordlist_filename))
     {
         std::cerr << "ERROR: No such file: " << wordlist_filename << std::endl;
@@ -49,12 +70,12 @@ int main(int argc, char* argv[])
     }
     std::ifstream wordlist{wordlist_filename};
 
-    Solver solver{wordlist, hardModeArg.getValue()};
+    Solver solver{wordlist, hard_mode};
 
     std::string first_guess =
-        (recalcFirstGuessArg.getValue() ? solver.getBestGuess() : "serai");
+        (recalc_first_guess ? solver.getBestGuess() : "serai");
 
-    if (statsArg.getValue())
+    if (stats_mode)
     {
         std::vector<size_t> guess_counts{};
 
@@ -93,8 +114,8 @@ int main(int argc, char* argv[])
         }
 
         std::cout << "Statistics for wordlist with " << guess_counts.size()
-                  << " words, " << (hardModeArg.getValue() ? "hard" : "easy")
-                  << " mode" << std::endl;
+                  << " words, " << (hard_mode ? "hard" : "easy") << " mode"
+                  << std::endl;
         std::cout << "Max guesses required: "
                   << *std::max_element(guess_counts.begin(), guess_counts.end())
                   << std::endl;

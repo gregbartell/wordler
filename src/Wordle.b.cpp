@@ -19,7 +19,7 @@ static void BM_WordleGetHint(benchmark::State& state)
         wordlist.emplace_back(std::move(str));
     }
 
-    for (auto _ : state)
+    for (auto _ : state)  // NOLINT
     {
         for (const auto& guess : wordlist)
         {

@@ -78,7 +78,7 @@ option(CLANG_TIDY_ERRORS "Set clang-tidy warnings to be build errors" OFF)
 
 if(USE_CLANG_TIDY AND CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   find_program(CLANG_TIDY_EXE
-      NAMES "clang-tidy"
+      NAMES "clang-tidy-12"
       DOC "Path to clang-tidy executable")
   if (CLANG_TIDY_ERRORS)
     set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_EXE};--warnings-as-errors=*")

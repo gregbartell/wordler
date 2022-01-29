@@ -11,14 +11,14 @@ jobs:
 
     strategy:
       matrix:
-        compiler: [g++-11, clang++-12]
+        compiler: [g++-10, clang++-12]
 
     steps:
       # Check out the repository under $GITHUB_WORKSPACE, so the job can access it
       - uses: actions/checkout@v2
       # Install any necessary programs
       - name: Configure Environment
-        run: sudo apt-get install ninja-build clang-tidy-12 libboost-all-dev
+        run: sudo apt-get install ninja-build clang-tidy-12 libboost-all-dev libtclap-dev
       - name: Run Benchmarks
         run: make bench
       - name: Store Benchmark Results

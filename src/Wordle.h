@@ -3,11 +3,8 @@
 #include <array>
 #include <cassert>
 #include <cctype>
-#include <iostream>
 #include <limits>
 #include <string>
-#include <unordered_map>
-#include <utility>
 
 class Wordle
 {
@@ -54,6 +51,4 @@ public:
 
         return guess;
     }
-
-    static inline std::unordered_map<std::string, std::string> s_map{};
 };
