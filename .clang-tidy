@@ -1,0 +1,30 @@
+Checks: '-*,bugprone-*,clang-analyzer-*,cppcoreguidelines-*,misc-*,performance-*,portability-*,readability-*,-*-magic-numbers,-cppcoreguidelines-pro-bounds-array-to-pointer-decay,-cppcoreguidelines-pro-bounds-constant-array-index,-readability-function-cognitive-complexity,-clang-analyzer-optin.cplusplus.VirtualCall,-misc-no-recursion'
+# Explicitly disabled warnings:
+#
+# It's hard to avoid magic numbers!
+# cppcoreguidelines-avoid-magic-numbers
+# readability-magic-numbers
+#
+# Has issues with assert()
+# cppcoreguidelines-pro-bounds-array-to-pointer-decay
+#
+# I just don't like this one
+# cppcoreguidelines-pro-bounds-constant-array-index
+#
+# I don't care enough to worry about this
+# readability-function-cognitive-complexity
+#
+# tclap violates this one and I can't figure out how to exclude just tclap headers
+# -clang-analyzer-optin.cplusplus.VirtualCall
+#
+# I don't believe this one is helpful in general cases: it may be useful in certain restrictive
+# environments, but that's not me
+# misc-no-recursion
+
+HeaderFilterRegex: 'src/*'
+
+CheckOptions:
+    # Allow implicit int->bool conversions as cctype functions (e.g. isalpha)
+    # return ints and "if (std::isalpha(val) != 0)" looks gross
+    - key:             readability-implicit-bool-conversion.AllowIntegerConditions
+      value:           '1'
