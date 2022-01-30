@@ -31,7 +31,6 @@ public:
         }
     }
 
-
     [[nodiscard]] std::string getBestGuess() const
     {
         if (m_solution_set.empty()) { return ""; }

@@ -12,10 +12,13 @@ public:
     // No objects, static functions only
     Wordle() = delete;
 
+    // Take guess by copy because we'll modify it and return it: we're adding a
+    // copy (relative to taking it by const-ref), but we're saving ourselves
+    // from having to construct a new string to return.
     static std::string getHint(std::string guess, const std::string& solution)
     {
+        // How often a given letter appears in solution, not counting matches
         std::array<uint_fast8_t, 26> freqs{};
-        // A possibility to speed it up: decrease size of freqs
 
         assert(guess.size() == solution.size());
         assert(guess.size() <

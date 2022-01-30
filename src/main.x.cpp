@@ -120,10 +120,10 @@ int main(int argc, char* argv[])
                   << *std::max_element(guess_counts.begin(), guess_counts.end())
                   << std::endl;
         std::cout << "Average (mean):       "
-                  << (std::accumulate(guess_counts.begin(),
-                                      guess_counts.end(),
-                                      0ULL) /
-                      guess_counts.size())
+                  << (static_cast<double>(std::accumulate(guess_counts.begin(),
+                                                          guess_counts.end(),
+                                                          0ULL)) /
+                      static_cast<double>(guess_counts.size()))
                   << std::endl;
     }
     else
