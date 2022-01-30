@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1643497784998,
+  "lastUpdate": 1643504789851,
   "repoUrl": "https://github.com/gregbartell/wordler",
   "entries": {
     "C++ Benchmark": [
@@ -72,6 +72,42 @@ window.BENCHMARK_DATA = {
             "value": 470440116.9999954,
             "unit": "ns/iter",
             "extra": "iterations: 2\ncpu: 470418150 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "gregorybartell@gmail.com",
+            "name": "Gregory Bartell",
+            "username": "gregbartell"
+          },
+          "committer": {
+            "email": "gregorybartell@gmail.com",
+            "name": "Gregory Bartell",
+            "username": "gregbartell"
+          },
+          "distinct": true,
+          "id": "5fe3cce0096e45df163af117de808dbb2cd562a2",
+          "message": "Clean Up Errant Comments, Add New Ones",
+          "timestamp": "2022-01-29T19:04:51-06:00",
+          "tree_id": "0892808af16ab641086d33a3335ca104dcabaa75",
+          "url": "https://github.com/gregbartell/wordler/commit/5fe3cce0096e45df163af117de808dbb2cd562a2"
+        },
+        "date": 1643504789519,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_SolverGetBestGuess/100",
+            "value": 67744145.40000038,
+            "unit": "ns/iter",
+            "extra": "iterations: 10\ncpu: 67711420 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_WordleGetHint/1000",
+            "value": 434869122.000002,
+            "unit": "ns/iter",
+            "extra": "iterations: 2\ncpu: 434814349.9999999 ns\nthreads: 1"
           }
         ]
       }
