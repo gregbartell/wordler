@@ -48,6 +48,8 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
 
 # Googlebench adds its own tests to CMake by default - we don't care about them
 set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "Enable googlebench internal tests" FORCE)
+# Googlebench likes to use Werror, which is a huge pet peeve of mine and breaks builds
+set(BENCHMARK_ENABLE_WERROR OFF CACHE BOOL "Enable -Werror for googlebench" FORCE)
 
 # Download and unpack googlebench at configure time
 configure_file(GBenchCMakeLists.txt.in googlebench-download/CMakeLists.txt)

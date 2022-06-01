@@ -87,8 +87,8 @@ int main(int argc, char* argv[])
             if (!solver.makeGuess(first_guess, hint))
             {
                 std::cerr << "ERROR: made bad guess. guess=" << first_guess
-                          << " solution=" << solution << " hint=" << hint
-                          << std::endl;
+                          << " solution=" << solution
+                          << " hint=" << hint.toString() << std::endl;
                 return 1;
             }
             size_t num_guesses = 1;
@@ -100,8 +100,8 @@ int main(int argc, char* argv[])
                 if (!solver.makeGuess(guess, hint))
                 {
                     std::cerr << "ERROR: made bad guess. guess=" << guess
-                              << " solution=" << solution << " hint=" << hint
-                              << std::endl;
+                              << " solution=" << solution
+                              << " hint=" << hint.toString() << std::endl;
                     return 1;
                 }
 
@@ -131,7 +131,9 @@ int main(int argc, char* argv[])
         std::string hint{};
 
         std::cout << "Start by entering '" << first_guess
-                  << "' as your first guess" << std::endl;
+                  << "' as your first guess ("
+                  << solver.getNumSolutionsRemaining()
+                  << " possible solutions left)" << std::endl;
         std::cout
             << "Enter hint (use '.' for miss, '+' for yellow match, '#' for green match):"
             << std::endl;
@@ -147,7 +149,9 @@ int main(int argc, char* argv[])
                 std::cerr << "ERROR: no possible solutions left" << std::endl;
                 return 1;
             }
-            std::cout << "Now guess: " << best_guess << std::endl;
+            std::cout << "Now guess: '" << best_guess << "' ("
+                      << solver.getNumSolutionsRemaining()
+                      << " possible solutions left)" << std::endl;
             std::cout << "Please enter hint:" << std::endl;
             std::cin >> hint;
 

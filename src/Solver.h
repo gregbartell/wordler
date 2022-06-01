@@ -31,6 +31,11 @@ public:
         }
     }
 
+    [[nodiscard]] size_t getNumSolutionsRemaining() const
+    {
+        return m_solution_set.size();
+    }
+
     [[nodiscard]] std::string getBestGuess() const
     {
         if (m_solution_set.empty()) { return ""; }
@@ -40,19 +45,11 @@ public:
         return getBestGuess(m_wordlist);
     }
 
-    [[nodiscard]] bool makeGuess(const std::string& guess,
-                                 const std::string& hint)
+    [[nodiscard]] bool makeGuess(const std::string& guess, const Hint& hint)
     {
         if (guess.size() != m_word_size)
         {
             std::cerr << "ERROR: guess has incorrect length (" << guess.size()
-                      << ", expected " << m_word_size << ")" << std::endl;
-            return false;
-        }
-
-        if (hint.size() != m_word_size)
-        {
-            std::cerr << "ERROR: hint has incorrect length (" << hint.size()
                       << ", expected " << m_word_size << ")" << std::endl;
             return false;
         }
@@ -93,16 +90,16 @@ public:
 private:
     [[nodiscard]] static bool
     isSolutionValid(const std::string& guess,
-                    const std::string& hint,
+                    const Hint& hint,
                     const std::string& possible_solution)
     {
         return hint == Wordle::getHint(guess, possible_solution);
     }
 
-    [[nodiscard]] std::unordered_set<std::string>
+    [[nodiscard]] std::unordered_set<Hint>
     getPossibleHints(const std::string& guess) const
     {
-        std::unordered_set<std::string> possible_hints{};
+        std::unordered_set<Hint> possible_hints{};
 
         for (const auto& possible_solution : m_solution_set)
         {
@@ -135,10 +132,10 @@ private:
                     }
                 }
 
-                // Pruning - if this hint+solution would eliminate fewer
+                // Pruning - if this hint+solution would not eliminate more
                 // possibilites than our best guess found so far, then this
-                // guess is worst than the best one we've found so far
-                if (solutions_eliminated < best_score)
+                // guess is not better than the best one we've found so far
+                if (solutions_eliminated <= best_score)
                 {
                     min_solutions_eliminated = 0;
                     break;

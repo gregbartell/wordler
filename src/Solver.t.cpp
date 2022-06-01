@@ -18,9 +18,8 @@ TEST(SolverTests, SingleWordWordlist)
 
     EXPECT_FALSE(solver.finished());
     EXPECT_EQ(solver.getBestGuess(), "aaa");
-    EXPECT_FALSE(solver.makeGuess("", "###"));    // Bad guess
-    EXPECT_FALSE(solver.makeGuess("aaa", ""));    // Bad hint
-    EXPECT_TRUE(solver.makeGuess("aaa", "###"));  // Good guess, good hint
+    EXPECT_FALSE(solver.makeGuess("", Hint{"###"}));    // Bad guess
+    EXPECT_TRUE(solver.makeGuess("aaa", Hint{"###"}));  // Good guess, good hint
     EXPECT_TRUE(solver.finished());
 }
 
@@ -34,7 +33,7 @@ TEST(SolverTests, SmallWordlist)
     // Should only ever guess words in wordlist
     EXPECT_TRUE(first_guess == "aaa" || first_guess == "bbb");
     // Tell it that its guess is all wrong
-    EXPECT_TRUE(solver.makeGuess(first_guess, "..."));
+    EXPECT_TRUE(solver.makeGuess(first_guess, Hint{"..."}));
 
     EXPECT_FALSE(solver.finished());
     auto second_guess = solver.getBestGuess();
@@ -42,7 +41,7 @@ TEST(SolverTests, SmallWordlist)
     EXPECT_TRUE(second_guess == "aaa" || second_guess == "bbb");
     EXPECT_NE(first_guess, second_guess);
     // Now tell it that it found the solution
-    EXPECT_TRUE(solver.makeGuess(second_guess, "###"));
+    EXPECT_TRUE(solver.makeGuess(second_guess, Hint{"###"}));
 
     EXPECT_TRUE(solver.finished());
 }
@@ -62,9 +61,9 @@ TEST(SolverTests, EasyMode)
     std::stringstream ss{"abcz\naeix\ndefz\nghiz\nxxxx"};
 
     Solver solver{ss, false /* easy mode */};
-    EXPECT_TRUE(
-        solver.makeGuess("xxxx",
-                         "...."));  // Eliminate "aeix" from the solution set
+    EXPECT_TRUE(solver.makeGuess(
+        "xxxx",
+        Hint{"...."}));  // Eliminate "aeix" from the solution set
     // "aeix" is still the optimal pick despite not being a valid solution.
 
     EXPECT_EQ(solver.getBestGuess(), "aeix");
@@ -78,9 +77,9 @@ TEST(SolverTests, HardMode)
     std::stringstream ss{"abcz\naeix\ndefz\nghiz\nxxxx"};
 
     Solver solver{ss, true /* hard mode */};
-    EXPECT_TRUE(
-        solver.makeGuess("xxxx",
-                         "...."));  // Eliminate "aeix" from the solution set
+    EXPECT_TRUE(solver.makeGuess(
+        "xxxx",
+        Hint{"...."}));  // Eliminate "aeix" from the solution set
     // "aeix" is still the optimal pick despite not being a valid solution.
 
     auto guess = solver.getBestGuess();
