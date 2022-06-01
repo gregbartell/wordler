@@ -30,7 +30,7 @@ Please enter hint:
 Congratulations, puzzle solved!
 ```
 
-The included wordlist (see wordlist.txt) is taken directly from [the official Wordle game](https://www.powerlanguage.co.uk/wordle/) and hence has all 5-letter words, but this program can use any list of words of length 1 through 255 without modification.
+The included wordlist (see wordlist.txt) is taken directly from [the official Wordle game](https://www.nytimes.com/games/wordle/index.html) and hence has all 5-letter words, but this program can use any list of words of length 1 through 255 without modification.
 
 ## Dependencies
 This program depends on [TCLAP](http://tclap.sourceforge.net/) for commandline argument parsing. Check if it's available through your distribution's package manager.
