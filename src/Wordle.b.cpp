@@ -10,13 +10,13 @@ static void BM_WordleGetHint(benchmark::State& state)
     std::default_random_engine rand_eng{rand_dev()};
     std::uniform_int_distribution<char> dist{'a', 'z'};
 
-    std::vector<std::string> wordlist{};
+    std::vector<Word> wordlist{};
+    std::string str(5, 'a');
     for (long i = 0; i < state.range(0); i++)
     {
-        std::string str{};
-        for (size_t j = 0; j < 5; j++) { str += dist(rand_eng); }
+        for (auto& c : str) { c = dist(rand_eng); }
 
-        wordlist.emplace_back(std::move(str));
+        wordlist.emplace_back(str);
     }
 
     for (auto _ : state)  // NOLINT
