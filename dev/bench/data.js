@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1654215693995,
+  "lastUpdate": 1654284923546,
   "repoUrl": "https://github.com/gregbartell/wordler",
   "entries": {
     "C++ Benchmark": [
@@ -180,6 +180,42 @@ window.BENCHMARK_DATA = {
             "value": 235609232.66666594,
             "unit": "ns/iter",
             "extra": "iterations: 3\ncpu: 235587966.66666663 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "gregorybartell@gmail.com",
+            "name": "Gregory Bartell",
+            "username": "gregbartell"
+          },
+          "committer": {
+            "email": "gregbartell@users.noreply.github.com",
+            "name": "gregbartell",
+            "username": "gregbartell"
+          },
+          "distinct": true,
+          "id": "b7ca248f32616a0e1b929620e56cf4147600044e",
+          "message": "Use 5 Byte Words\n\n(\"Words\" in the Wordle sense, not computer words)\nThis is another performance improvement, decreasing time taken on the\nguess generation benchmark by ~35% and time taken on the hint generation\nbenchmark by ~17%.",
+          "timestamp": "2022-06-03T14:34:01-05:00",
+          "tree_id": "71d27374fc41afc2138d59d6df29ade755dcc063",
+          "url": "https://github.com/gregbartell/wordler/commit/b7ca248f32616a0e1b929620e56cf4147600044e"
+        },
+        "date": 1654284923160,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_SolverGetBestGuess/100",
+            "value": 55487116.84615389,
+            "unit": "ns/iter",
+            "extra": "iterations: 13\ncpu: 55482115.384615384 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_WordleGetHint/1000",
+            "value": 327645700.99999446,
+            "unit": "ns/iter",
+            "extra": "iterations: 2\ncpu: 327618349.99999994 ns\nthreads: 1"
           }
         ]
       }
