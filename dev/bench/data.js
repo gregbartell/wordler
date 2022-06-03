@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1654215693331,
+  "lastUpdate": 1654215693995,
   "repoUrl": "https://github.com/gregbartell/wordler",
   "entries": {
     "C++ Benchmark": [
@@ -144,6 +144,42 @@ window.BENCHMARK_DATA = {
             "value": 234176815.66667172,
             "unit": "ns/iter",
             "extra": "iterations: 3\ncpu: 234044966.66666663 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "gregorybartell@gmail.com",
+            "name": "Gregory Bartell",
+            "username": "gregbartell"
+          },
+          "committer": {
+            "email": "gregbartell@users.noreply.github.com",
+            "name": "gregbartell",
+            "username": "gregbartell"
+          },
+          "distinct": true,
+          "id": "4d54847f61712b2b080b66338753e1588e96fcc0",
+          "message": "Use 1-Byte Hints\n\nChanges the way hints are stored internally to use less memory.\nThis is a significant performance improvement: the time taken on the\nhint generation benchmark is reduced by ~37% and the time taken on the\noverall guess generation test is reduced by ~50%.\n\nThis change removes support for Wordle variants using word lengths other\nthan 5.",
+          "timestamp": "2022-06-02T19:20:18-05:00",
+          "tree_id": "b6ba3cfafabe965da102ffafa1371cf24d6fdc03",
+          "url": "https://github.com/gregbartell/wordler/commit/4d54847f61712b2b080b66338753e1588e96fcc0"
+        },
+        "date": 1654215692986,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_SolverGetBestGuess/100",
+            "value": 44172507.44444425,
+            "unit": "ns/iter",
+            "extra": "iterations: 18\ncpu: 44096211.111111104 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_WordleGetHint/1000",
+            "value": 235609232.66666594,
+            "unit": "ns/iter",
+            "extra": "iterations: 3\ncpu: 235587966.66666663 ns\nthreads: 1"
           }
         ]
       }
