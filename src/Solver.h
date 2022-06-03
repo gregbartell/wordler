@@ -18,11 +18,11 @@ public:
     {
         for (std::string word{}; wordlist >> word;)
         {
-            if (m_word_size == 0) { m_word_size = word.size(); }
-            else if (m_word_size != word.size())
+            if (word.length() != Word::size())
             {
-                std::cerr << "ERROR: wordlist has words of different lengths"
-                          << std::endl;
+                std::cerr
+                    << "ERROR: wordlist has words that are not the proper length ("
+                    << Word::size() << ")" << std::endl;
                 std::exit(1);
             }
 
@@ -36,26 +36,18 @@ public:
         return m_solution_set.size();
     }
 
-    [[nodiscard]] std::string getBestGuess() const
+    [[nodiscard]] Word getBestGuess() const
     {
-        if (m_solution_set.empty()) { return ""; }
+        if (m_solution_set.empty()) { return {}; }
         if (m_solution_set.size() == 1) { return *m_solution_set.begin(); }
 
         if (m_hard_mode) { return getBestGuess(m_solution_set); }
         return getBestGuess(m_wordlist);
     }
 
-    [[nodiscard]] bool makeGuess(const std::string& guess, const Hint& hint)
+    [[nodiscard]] bool makeGuess(const Word& guess, const Hint& hint)
     {
-        if (guess.size() != m_word_size)
-        {
-            std::cerr << "ERROR: guess has incorrect length (" << guess.size()
-                      << ", expected " << m_word_size << ")" << std::endl;
-            return false;
-        }
-
-        // We won
-        if (hint == std::string(guess.size(), '#')) { m_solved = true; }
+        m_solved = hint.allCorrect();  // We won
 
         std::erase_if(m_solution_set, [&guess, &hint](const auto& solution) {
             return !isSolutionValid(guess, hint, solution);
@@ -88,16 +80,15 @@ public:
     }
 
 private:
-    [[nodiscard]] static bool
-    isSolutionValid(const std::string& guess,
-                    const Hint& hint,
-                    const std::string& possible_solution)
+    [[nodiscard]] static bool isSolutionValid(const Word& guess,
+                                              const Hint& hint,
+                                              const Word& possible_solution)
     {
         return hint == Wordle::getHint(guess, possible_solution);
     }
 
     [[nodiscard]] std::unordered_set<Hint>
-    getPossibleHints(const std::string& guess) const
+    getPossibleHints(const Word& guess) const
     {
         std::unordered_set<Hint> possible_hints{};
 
@@ -110,9 +101,9 @@ private:
     }
 
     template <typename CONTAINER>
-    [[nodiscard]] std::string getBestGuess(const CONTAINER& container) const
+    [[nodiscard]] Word getBestGuess(const CONTAINER& container) const
     {
-        std::string best_guess{};
+        Word best_guess{};
         size_t best_score = 0;
 
         for (const auto& guess : container)
@@ -123,7 +114,12 @@ private:
                 std::numeric_limits<size_t>::max();
             for (const auto& hint : possible_hints)
             {
+                // This hint would only be given if this guess was the solution,
+                // so it could not reduce min_solutions_eliminated
+                if (hint.allCorrect()) { continue; }
+
                 size_t solutions_eliminated = 0;
+
                 for (const auto& possible_solution : m_solution_set)
                 {
                     if (!isSolutionValid(guess, hint, possible_solution))
@@ -155,10 +151,8 @@ private:
         return best_guess;
     }
 
-    std::vector<std::string> m_wordlist{};
-    std::unordered_set<std::string> m_solution_set{};
-
-    size_t m_word_size = 0;
+    std::vector<Word> m_wordlist{};
+    std::unordered_set<Word> m_solution_set{};
 
     bool m_hard_mode{false};
     bool m_solved{false};

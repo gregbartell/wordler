@@ -72,8 +72,8 @@ int main(int argc, char* argv[])
 
     Solver solver{wordlist, hard_mode};
 
-    std::string first_guess =
-        (recalc_first_guess ? solver.getBestGuess() : "serai");
+    Word first_guess =
+        (recalc_first_guess ? solver.getBestGuess() : Word{"serai"});
 
     if (stats_mode)
     {
@@ -81,13 +81,16 @@ int main(int argc, char* argv[])
 
         // Reopen wordlist
         wordlist = std::ifstream{wordlist_filename};
-        for (std::string solution{}; wordlist >> solution;)
+        for (std::string solution_str{}; wordlist >> solution_str;)
         {
+            Word solution{solution_str};
+
             auto hint = Wordle::getHint(first_guess, solution);
             if (!solver.makeGuess(first_guess, hint))
             {
-                std::cerr << "ERROR: made bad guess. guess=" << first_guess
-                          << " solution=" << solution
+                std::cerr << "ERROR: made bad guess. guess="
+                          << first_guess.toString()
+                          << " solution=" << solution.toString()
                           << " hint=" << hint.toString() << std::endl;
                 return 1;
             }
@@ -99,9 +102,10 @@ int main(int argc, char* argv[])
                 auto hint  = Wordle::getHint(guess, solution);
                 if (!solver.makeGuess(guess, hint))
                 {
-                    std::cerr << "ERROR: made bad guess. guess=" << guess
-                              << " solution=" << solution
-                              << " hint=" << hint.toString() << std::endl;
+                    std::cerr
+                        << "ERROR: made bad guess. guess=" << guess.toString()
+                        << " solution=" << solution.toString()
+                        << " hint=" << hint.toString() << std::endl;
                     return 1;
                 }
 
@@ -128,34 +132,34 @@ int main(int argc, char* argv[])
     }
     else
     {
-        std::string hint{};
+        std::string hint_str{};
 
-        std::cout << "Start by entering '" << first_guess
+        std::cout << "Start by entering '" << first_guess.toString()
                   << "' as your first guess ("
                   << solver.getNumSolutionsRemaining()
                   << " possible solutions left)" << std::endl;
         std::cout
             << "Enter hint (use '.' for miss, '+' for yellow match, '#' for green match):"
             << std::endl;
-        std::cin >> hint;
-        if (!solver.makeGuess(first_guess, hint)) { return 1; }
+        std::cin >> hint_str;
+        if (!solver.makeGuess(first_guess, Hint{hint_str})) { return 1; }
 
         while (!solver.finished())
         {
             std::cout << "-----" << std::endl;
             auto best_guess = solver.getBestGuess();
-            if (best_guess.empty())
+            if (!best_guess.isValid())
             {
                 std::cerr << "ERROR: no possible solutions left" << std::endl;
                 return 1;
             }
-            std::cout << "Now guess: '" << best_guess << "' ("
+            std::cout << "Now guess: '" << best_guess.toString() << "' ("
                       << solver.getNumSolutionsRemaining()
                       << " possible solutions left)" << std::endl;
             std::cout << "Please enter hint:" << std::endl;
-            std::cin >> hint;
+            std::cin >> hint_str;
 
-            if (!solver.makeGuess(best_guess, hint)) { return 1; }
+            if (!solver.makeGuess(best_guess, Hint{hint_str})) { return 1; }
         }
 
         std::cout << "Congratulations, puzzle solved!" << std::endl;

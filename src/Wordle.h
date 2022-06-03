@@ -6,13 +6,83 @@
 #include <functional>  // std::hash
 #include <limits>
 #include <string>
+#include <string_view>
+
+class Word
+{
+public:
+    Word()
+    {
+        // To differentiate an invalid Word (created with this constructor) from
+        // "aaaaa", we use 29 as a sentinel value: this will print as "~~~~~"
+        m_word.fill(29);
+    }
+
+    Word(std::string_view word_str)
+    {
+        assert(word_str.length() == 5);
+
+        for (size_t i = 0; i < m_word.size(); i++)
+        {
+            const auto& c = word_str[i];
+            assert(std::islower(static_cast<unsigned char>(c)));
+
+            m_word[i] = c - 'a';
+        }
+    }
+
+    static constexpr size_t size() { return 5; }
+
+    bool operator==(const Word& other) const { return m_word == other.m_word; }
+
+    bool operator!=(const Word& other) const { return !(*this == other); }
+
+    const auto& operator[](size_t i) const { return m_word[i]; }
+
+    bool isValid() const { return (*this != Word{}); }
+
+    std::string toString() const
+    {
+        std::string ret(5, 'a');
+
+        for (size_t i = 0; i < m_word.size(); i++)
+        {
+            ret[i] += m_word[i];  // NOLINT
+        }
+
+        return ret;
+    }
+
+private:
+    friend struct std::hash<Word>;
+
+    std::array<uint_fast8_t, 5> m_word{};
+};
+
+template <>
+struct std::hash<Word>
+{
+    size_t operator()(Word const& word) const noexcept
+    {
+        // Each word is 5 numbers, each with a value in the range [0, 25]
+        // That's 5 bits for each number, so 25 bits necessary to fit all of
+        // them
+        size_t hash_val = 0;
+        for (const auto& c : word.m_word)
+        {
+            hash_val <<= 5;
+            hash_val |= c;
+        }
+        return hash_val;
+    }
+};
 
 class Hint
 {
 public:
     Hint() = default;
 
-    Hint(const std::string& hint)
+    Hint(std::string_view hint)
     {
         assert(hint.size() <= 5);
         for (size_t i = 0; i < hint.size(); i++)
@@ -32,11 +102,14 @@ public:
     std::string toString() const
     {
         std::string ret{};
+        ret.reserve(5);
 
         for (size_t i = 0; i < 5; i++) { ret += get(i); }
 
         return ret;
     }
+
+    bool allCorrect() const { return m_hint == 242; }
 
     char get(size_t i) const
     {
@@ -88,19 +161,15 @@ private:
 
     friend struct std::hash<Hint>;
 
-    // Hint is encoded in base three, left-to-right, with value 0 for miss, 1
-    // for yellow, 2 for green
-    uint8_t m_hint = 0;
+    // Hint is encoded in base three with value 0 for miss, 1 for yellow, 2 for
+    // green
+    uint_fast8_t m_hint = 0;
 };
-static_assert(sizeof(Hint) == 1);
 
 template <>
 struct std::hash<Hint>
 {
-    auto operator()(Hint const& hint) const noexcept
-    {
-        return std::hash<uint8_t>{}(hint.m_hint);
-    }
+    size_t operator()(Hint const& hint) const noexcept { return hint.m_hint; }
 };
 
 class Wordle
@@ -109,31 +178,26 @@ public:
     // No objects, static functions only
     Wordle() = delete;
 
-    static Hint getHint(const std::string& guess, const std::string& solution)
+    static Hint getHint(const Word& guess, const Word& solution)
     {
         Hint hint{};
 
         // How often a given letter appears in solution, not counting matches
         std::array<uint_fast8_t, 26> freqs{};
 
-        assert(guess.size() == solution.size());
-        assert(guess.size() <
-               std::numeric_limits<decltype(freqs)::value_type>::max());
-
-        for (size_t i = 0; i < guess.size(); i++)
+        for (size_t i = 0; i < Word::size(); i++)
         {
             const auto& guess_letter    = guess[i];
             const auto& solution_letter = solution[i];
-            assert(std::islower(static_cast<unsigned char>(guess_letter)));
 
             if (guess_letter == solution_letter) { hint.set(i, true); }
             else
             {
-                freqs[solution_letter - 'a']++;
+                freqs[solution_letter]++;
             }
         }
 
-        for (size_t i = 0; i < guess.size(); i++)
+        for (size_t i = 0; i < Word::size(); i++)
         {
             const auto& guess_letter    = guess[i];
             const auto& solution_letter = solution[i];
@@ -143,9 +207,9 @@ public:
             if (guess_letter == solution_letter) { continue; }
 
             // If there are more of these in the solution
-            if (freqs[guess_letter - 'a'] > 0)
+            if (freqs[guess_letter] > 0)
             {
-                freqs[guess_letter - 'a']--;
+                freqs[guess_letter]--;
                 hint.set(i, false);
             }
         }
